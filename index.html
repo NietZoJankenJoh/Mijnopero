@@ -8614,14 +8614,13 @@
     }
 
     function initializeAppContext() {
-        const defaultEmployee = getEmployees()[0];
-        const storedName = localStorage.getItem("operoUserName") || defaultEmployee?.name || "Peter";
-        const storedUsername = localStorage.getItem("operoLoginUsername") || defaultEmployee?.username || storedName.toLowerCase().replace(/[^a-z0-9]+/g, ".") || "opero";
+        const storedName = localStorage.getItem("operoUserName") || "Peter";
+        const storedUsername = localStorage.getItem("operoLoginUsername") || storedName.toLowerCase().replace(/[^a-z0-9]+/g, ".") || "opero";
         ["operoLoggedIn", "operoSessionExpiresAt", "operoRememberedLogin", "operoLoginProtection", "operoUserRole", "operoUserAccess"].forEach((key) => localStorage.removeItem(key));
         localStorage.setItem("operoLoginUsername", storedUsername);
         localStorage.setItem("operoUserName", storedName);
         localStorage.setItem("operoUserRole", "employee");
-        localStorage.setItem("operoUserAccess", defaultEmployee?.access || "Dashboard");
+        localStorage.setItem("operoUserAccess", "Dashboard");
     }
 
     const views = {
