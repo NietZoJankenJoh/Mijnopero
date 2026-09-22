@@ -5232,6 +5232,440 @@
                 background: rgba(11, 17, 20, 0.96);
             }
         }
+
+        @media (max-width: 900px) {
+            .app.is-authenticated {
+                display: block;
+            }
+
+            .app > .sidebar,
+            .sidebar {
+                position: static;
+                width: auto;
+                height: auto;
+                max-height: none;
+            }
+
+            .sidebar {
+                margin-bottom: 14px;
+                padding: 18px 16px;
+                border-right: 0;
+                border-bottom: 1px solid var(--lux-line);
+                box-shadow: 0 16px 28px rgba(0, 0, 0, 0.18);
+            }
+
+            .brand {
+                margin-bottom: 16px;
+                padding-bottom: 16px;
+            }
+
+            .menu {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                gap: 8px;
+                overflow-x: auto;
+                padding-bottom: 4px;
+                scrollbar-width: thin;
+            }
+
+            .menu-item {
+                flex: 0 0 auto;
+                min-height: 44px;
+                padding: 12px 14px;
+                white-space: nowrap;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 18px;
+            }
+
+            .header > div:first-child,
+            .user,
+            .view-header > div:first-child {
+                min-width: 0;
+            }
+
+            .user {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                padding: 12px;
+            }
+
+            .profile-trigger {
+                flex: 1 1 180px;
+                min-height: 44px;
+                text-align: left;
+            }
+
+            .logout-button,
+            .kiosk-button {
+                min-height: 44px;
+                padding: 10px 14px;
+                border: 1px solid var(--lux-line);
+                border-left: 1px solid var(--lux-line);
+                border-radius: 12px;
+            }
+
+            .site-footer {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 16px 20px;
+                padding: 20px 18px 28px;
+            }
+
+            .dashboard-overview {
+                gap: 16px;
+            }
+
+            .overview-metrics {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .recent-order {
+                flex-wrap: wrap;
+                align-items: flex-start;
+            }
+
+            .recent-order-status {
+                white-space: normal;
+            }
+
+            .employee-dialog {
+                width: min(100%, calc(100vw - 32px));
+                max-height: calc(100vh - 32px);
+                padding: 22px;
+            }
+
+            .employee-details,
+            .form-grid,
+            .order-routing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .employee-form-actions,
+            #employeeOwnerActions {
+                flex-wrap: wrap;
+            }
+
+            .details-list div {
+                align-items: flex-start;
+            }
+
+            .details-list strong,
+            .employee-detail-value,
+            .site-footer span,
+            .site-footer strong {
+                overflow-wrap: anywhere;
+            }
+
+            .display-screen {
+                padding: 20px 16px 28px;
+            }
+
+            .display-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
+
+            .display-close {
+                width: 100%;
+            }
+
+            .display-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .display-status-row {
+                grid-template-columns: 92px 1fr auto;
+            }
+
+            .order-toast {
+                top: 16px;
+                right: 16px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .main {
+                padding: 16px 12px 28px;
+            }
+
+            .sidebar {
+                padding: 14px 12px;
+            }
+
+            .header {
+                padding: 20px 16px;
+                border-radius: 18px;
+            }
+
+            .header h1,
+            .view-header h1 {
+                font-size: clamp(1.6rem, 7vw, 2rem);
+                overflow-wrap: anywhere;
+            }
+
+            .header p,
+            .view-header p,
+            .employee-dialog-title,
+            .advanced-note,
+            .kiosk-metric-note {
+                overflow-wrap: anywhere;
+            }
+
+            .stats,
+            .kiosk-metrics {
+                gap: 12px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .stats .card,
+            .content-grid > .card,
+            .dashboard-overview-card,
+            .employee-glass-card {
+                padding: 18px;
+            }
+
+            .kiosk-metrics {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .kiosk-metric {
+                padding: 16px;
+            }
+
+            .view-header,
+            .advanced-toolbar,
+            .toolbar {
+                align-items: stretch;
+            }
+
+            .toolbar,
+            .advanced-actions {
+                width: 100%;
+            }
+
+            .toolbar > *,
+            .advanced-actions > *,
+            .view-header .toolbar > * {
+                flex: 1 1 auto;
+            }
+
+            .main .card:has(> .data-table),
+            .advanced-table-wrap {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .data-table {
+                min-width: 560px;
+            }
+
+            .chat-float-panel {
+                right: 12px;
+                bottom: 66px;
+                width: calc(100vw - 24px);
+                max-width: 420px;
+                max-height: calc(100vh - 86px);
+            }
+
+            .chat-float-panel .chat-layout {
+                height: calc(100vh - 86px);
+            }
+
+            .chat-composer {
+                flex-wrap: wrap;
+            }
+
+            .chat-composer input {
+                flex-basis: 100%;
+            }
+
+            .chat-composer .primary-button {
+                margin-left: auto;
+            }
+
+            .chat-message {
+                max-width: min(88%, 520px);
+            }
+
+            .file-actions {
+                flex-direction: column;
+            }
+
+            .setting-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .setting-control {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .new-order-total {
+                flex-wrap: wrap;
+                justify-content: flex-start;
+            }
+
+            .order-line:not(.order-line-header) {
+                grid-template-columns: minmax(0, 1fr) auto;
+            }
+
+            .order-line:not(.order-line-header) strong {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 560px) {
+            button,
+            .primary-button,
+            .secondary-button,
+            .logout-button,
+            .kiosk-button,
+            .profile-trigger,
+            .chat-attach-button,
+            .icon-action,
+            .advanced-tab,
+            .display-close,
+            .context-menu button {
+                min-height: 44px;
+            }
+
+            input,
+            select,
+            textarea {
+                min-height: 44px;
+            }
+
+            .user,
+            .employee-form-actions,
+            #employeeOwnerActions,
+            .toolbar,
+            .advanced-actions,
+            .call-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .stats,
+            .kiosk-metrics,
+            .display-grid,
+            .overview-metrics,
+            .site-footer {
+                grid-template-columns: 1fr;
+            }
+
+            .employee-dialog {
+                width: min(100%, calc(100vw - 20px));
+                max-height: calc(100vh - 20px);
+                padding: 18px;
+            }
+
+            .employee-dialog-header {
+                flex-wrap: wrap;
+            }
+
+            .employee-form-actions > *,
+            #employeeOwnerActions > *,
+            .toolbar > *,
+            .advanced-actions > *,
+            .call-controls > * {
+                width: 100%;
+            }
+
+            .modal-close {
+                width: 40px;
+                height: 40px;
+                margin-left: auto;
+            }
+
+            .display-status-row,
+            .display-stock-row {
+                grid-template-columns: 1fr;
+            }
+
+            .display-stock-row strong {
+                justify-self: start;
+            }
+
+            .display-bars {
+                gap: 8px;
+                padding: 0 0 20px;
+            }
+
+            .chat-float {
+                left: 12px;
+                right: 12px;
+            }
+
+            .chat-tab {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .main {
+                padding: 12px 10px 24px;
+            }
+
+            .header {
+                padding: 18px 14px;
+            }
+
+            .stats,
+            .kiosk-metrics,
+            .display-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats .card,
+            .content-grid > .card,
+            .dashboard-overview-card,
+            .employee-glass-card,
+            .display-kpi,
+            .display-panel {
+                padding: 16px;
+            }
+
+            .display-screen {
+                padding: 16px 12px 24px;
+            }
+
+            .display-kpi strong {
+                font-size: 28px;
+            }
+
+            .overview-metric strong {
+                font-size: 20px;
+            }
+
+            .chat-messages {
+                padding: 16px;
+            }
+
+            .chat-composer {
+                padding: 12px;
+            }
+
+            .chat-float-panel {
+                left: 12px;
+                width: auto;
+                max-width: none;
+            }
+
+            .site-footer {
+                padding: 18px 12px 24px;
+            }
+        }
     </style>
 </head>
 
