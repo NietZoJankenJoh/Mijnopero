@@ -5238,37 +5238,7 @@
 
 <body>
 
-<section class="login-screen" id="loginScreen">
-    <div class="login-card">
-        <div class="login-brand">
-            <div class="logo" aria-hidden="true"></div>
-            <strong>Opero</strong>
-        </div>
-
-        <h1>Welkom terug</h1>
-        <p class="muted">Meld je aan om je bedrijfsdashboard te openen.</p>
-
-        <form class="login-form" id="loginForm">
-            <label for="loginUsername">Gebruikersnaam
-                <input id="loginUsername" name="username" type="text" autocomplete="username" required>
-            </label>
-
-            <label for="loginPassword">Wachtwoord (medewerkers)
-                <input id="loginPassword" name="password" type="password" autocomplete="current-password">
-            </label>
-
-            <label class="remember-login" for="rememberLogin">
-                <input id="rememberLogin" type="checkbox">
-                Gebruikersnaam onthouden op deze computer
-            </label>
-
-            <p class="login-error" id="loginError" role="alert"></p>
-            <button class="primary-button login-button" type="submit">Aanmelden</button>
-        </form>
-    </div>
-</section>
-
-<div class="app" id="app">
+<div class="app is-authenticated" id="app">
 
     <!-- =========================
          SIDEBAR
@@ -5353,7 +5323,6 @@
             <div class="user">
                 <button class="profile-trigger" type="button" id="profileButton">👤 <span id="profileName">Ruben</span></button>
                 <button class="kiosk-button" type="button" id="kioskButton" title="Groot scherm" aria-label="Groot scherm"><span aria-hidden="true">⛶</span></button>
-                <button class="logout-button" type="button" id="logoutButton">Uitloggen</button>
             </div>
 
         </div>
@@ -6148,11 +6117,6 @@
     const isDisplayWindow = new URLSearchParams(window.location.search).get("display") === "1";
     const brandHome = document.getElementById("brandHome");
     const greetingText = document.getElementById("greetingText");
-    const loginScreen = document.getElementById("loginScreen");
-    const loginForm = document.getElementById("loginForm");
-    const loginError = document.getElementById("loginError");
-    const rememberLogin = document.getElementById("rememberLogin");
-    const logoutButton = document.getElementById("logoutButton");
     const kioskButton = document.getElementById("kioskButton");
     const themeToggle = document.getElementById("themeToggle");
     const mainContent = document.getElementById("mainContent");
@@ -7738,10 +7702,6 @@
         localStorage.setItem("operoEmployees", JSON.stringify(employees));
     }
 
-    const sessionDurationMs = 8 * 60 * 60 * 1000;
-    const maxLoginAttempts = 5;
-    const loginLockDurationMs = 15 * 60 * 1000;
-
     function encodeBytes(bytes) {
         return btoa(String.fromCharCode(...bytes));
     }
@@ -7768,41 +7728,6 @@
 
     function isStrongPassword(password) {
         return password.length >= 12 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /\d/.test(password) && /[^A-Za-z0-9]/.test(password);
-    }
-
-    function getLoginProtection() {
-        try {
-            return JSON.parse(localStorage.getItem("operoLoginProtection") || "{}") || {};
-        } catch (error) {
-            return {};
-        }
-    }
-
-    function registerFailedLogin() {
-        const protection = getLoginProtection();
-        const failures = Number(protection.failures || 0) + 1;
-        const lockedUntil = failures >= maxLoginAttempts ? Date.now() + loginLockDurationMs : 0;
-        localStorage.setItem("operoLoginProtection", JSON.stringify({ failures: lockedUntil ? 0 : failures, lockedUntil }));
-        return lockedUntil;
-    }
-
-    function clearSession() {
-        ["operoLoggedIn", "operoLoginUsername", "operoUserRole", "operoUserAccess", "operoSessionExpiresAt", "operoRememberedLogin", "operoLoginProtection"].forEach((key) => localStorage.removeItem(key));
-    }
-
-    async function verifyEmployeeLogin(username, password) {
-        const normalizedUsername = String(username || "").trim().toLowerCase();
-        const employee = getEmployees().find((item) => String(item.username || "").trim().toLowerCase() === normalizedUsername);
-        if (!employee) return null;
-        if (employee.passwordHash && employee.passwordSalt) return (await verifyPasswordCredential(password, employee)) ? employee : null;
-        if (employee.password !== password) return null;
-        const credential = await createPasswordCredential(password);
-        saveEmployees(getEmployees().map((item) => String(item.username || "").trim().toLowerCase() === normalizedUsername ? { ...item, ...credential, password: undefined } : item));
-        return { ...employee, ...credential, password: undefined };
-    }
-
-    async function verifyOwnerLogin(username, password) {
-        return String(username || "").trim().toLowerCase() === "ruben";
     }
 
     function loadDemoData(showConfirmation = true, renderView = true) {
@@ -8640,7 +8565,6 @@
     });
 
     function showAuthenticatedApp() {
-        loginScreen.style.display = "none";
         app.classList.add("is-authenticated");
 
         if (isDisplayWindow) {
@@ -8689,69 +8613,14 @@
         });
     }
 
-    function showLoginScreen() {
-        if (isDisplayWindow) {
-            displayScreen.hidden = true;
-            return;
-        }
-        app.classList.remove("is-authenticated");
-        chatFloat.hidden = true;
-        chatFloatPanel.hidden = true;
-        loginScreen.style.display = "flex";
-        loginForm.reset();
-        try {
-            const rememberedLogin = JSON.parse(localStorage.getItem("operoRememberedLogin") || "null");
-            if (rememberedLogin) {
-                document.getElementById("loginUsername").value = rememberedLogin.username || "";
-                rememberLogin.checked = true;
-            }
-        } catch (error) {
-            localStorage.removeItem("operoRememberedLogin");
-        }
-        loginError.textContent = "";
-        document.getElementById("loginUsername").focus();
+    function initializeAppContext() {
+        const storedName = localStorage.getItem("operoUserName") || "Ruben";
+        ["operoLoggedIn", "operoSessionExpiresAt", "operoRememberedLogin", "operoLoginProtection"].forEach((key) => localStorage.removeItem(key));
+        localStorage.setItem("operoLoginUsername", "ruben");
+        localStorage.setItem("operoUserName", storedName);
+        localStorage.setItem("operoUserRole", "owner");
+        localStorage.setItem("operoUserAccess", "Volledige toegang");
     }
-
-    loginForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-
-        const username = document.getElementById("loginUsername").value.trim();
-        const normalizedUsername = username.toLowerCase();
-        const password = document.getElementById("loginPassword").value;
-        const protection = getLoginProtection();
-        if (Number(protection.lockedUntil || 0) > Date.now()) {
-            const minutes = Math.ceil((protection.lockedUntil - Date.now()) / 60000);
-            loginError.textContent = `Te veel mislukte pogingen. Probeer het over ${minutes} minuten opnieuw.`;
-            return;
-        }
-
-        const validOwner = await verifyOwnerLogin(username, password);
-        const employee = validOwner ? null : await verifyEmployeeLogin(username, password);
-
-        if (!validOwner && !employee) {
-            const lockedUntil = registerFailedLogin();
-            loginError.textContent = lockedUntil ? "Te veel mislukte pogingen. Probeer het over 15 minuten opnieuw." : "De gebruikersnaam of het wachtwoord klopt niet.";
-            document.getElementById("loginPassword").select();
-            return;
-        }
-
-        localStorage.removeItem("operoLoginProtection");
-        localStorage.setItem("operoLoggedIn", "true");
-        localStorage.setItem("operoSessionExpiresAt", String(Date.now() + sessionDurationMs));
-        localStorage.setItem("operoLoginUsername", username);
-        localStorage.setItem("operoUserName", validOwner ? username : employee.name);
-        localStorage.setItem("operoUserRole", validOwner ? "owner" : "employee");
-        localStorage.setItem("operoUserAccess", validOwner ? "Volledige toegang" : employee.access);
-        if (rememberLogin.checked) localStorage.setItem("operoRememberedLogin", JSON.stringify({ username }));
-        else localStorage.removeItem("operoRememberedLogin");
-        if (localStorage.getItem("operoDemoDataLoaded") !== "3") loadDemoData(false, false);
-        showAuthenticatedApp();
-    });
-
-    logoutButton.addEventListener("click", () => {
-        clearSession();
-        showLoginScreen();
-    });
 
     const views = {
         orders: {
@@ -9357,13 +9226,9 @@
 
     if (!isDisplayWindow) updateUserName();
 
-    if (localStorage.getItem("operoLoggedIn") === "true" && Number(localStorage.getItem("operoSessionExpiresAt") || 0) > Date.now()) {
-        if (localStorage.getItem("operoDemoDataLoaded") !== "3") loadDemoData(false, false);
-        showAuthenticatedApp();
-    } else {
-        clearSession();
-        showLoginScreen();
-    }
+    initializeAppContext();
+    if (localStorage.getItem("operoDemoDataLoaded") !== "3") loadDemoData(false, false);
+    showAuthenticatedApp();
 
 </script>
 
